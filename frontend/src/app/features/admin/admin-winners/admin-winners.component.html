@@ -1,0 +1,37 @@
+<section class="page-title">
+  <h1>Winners</h1>
+  <p class="muted">Track prize payouts and mark completed payments.</p>
+</section>
+
+<section class="glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Draw Date</th>
+        <th>Match Count</th>
+        <th>Prize</th>
+        <th>Charity Amount</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (winner of winners$ | async; track winner._id) {
+        <tr>
+          <td>{{ $any(winner.userId).name }}</td>
+          <td>{{ $any(winner.drawId).createdAt | date:'mediumDate' }}</td>
+          <td>{{ winner.matchCount }}</td>
+          <td>{{ winner.prizeAmount | inrCurrency }}</td>
+          <td>{{ winner.charityAmount | inrCurrency }}</td>
+          <td>{{ winner.status | titlecase }}</td>
+          <td>
+            @if (winner.status === 'pending') {
+              <button class="primary-btn" type="button" (click)="markPaid(winner._id)">Mark Paid</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

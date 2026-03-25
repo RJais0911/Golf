@@ -1,0 +1,34 @@
+<section class="auth-shell glass-card">
+  <div>
+    <h1>Welcome back</h1>
+    <p class="muted">Sign in to manage your subscription, scores, and charity impact.</p>
+  </div>
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label class="field">
+      <span>Email</span>
+      <input type="email" formControlName="email" placeholder="you@example.com">
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <span class="error-text">Enter a valid email address.</span>
+      }
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" formControlName="password" placeholder="Your password">
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="error-text">Password is required.</span>
+      }
+    </label>
+
+    @if (error$ | async; as error) {
+      <p class="error-text">{{ error }}</p>
+    }
+
+    <button class="primary-btn" type="submit">Login</button>
+  </form>
+
+  @if (loading$ | async) {
+    <app-loader></app-loader>
+  }
+</section>

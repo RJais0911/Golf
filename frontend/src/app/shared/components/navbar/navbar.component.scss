@@ -1,0 +1,55 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.links a,
+.links button {
+  color: #0f172a;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.active {
+  color: #0f766e;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  background: #f8fafc;
+  border-radius: 999px;
+}
+
+.expired {
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 700;
+}

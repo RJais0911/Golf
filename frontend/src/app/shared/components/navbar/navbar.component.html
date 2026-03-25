@@ -1,0 +1,32 @@
+<nav class="navbar">
+  <a class="brand" routerLink="/dashboard">Golf Charity</a>
+
+  <div class="links">
+    @if ((isAuthenticated$ | async) === false) {
+      <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+      <a routerLink="/auth/signup" routerLinkActive="active">Sign Up</a>
+    }
+
+    @if (isAuthenticated$ | async) {
+      @if (isAdmin$ | async) {
+        <a routerLink="/admin" routerLinkActive="active">Admin Panel</a>
+      } @else {
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/scores" routerLinkActive="active">My Scores</a>
+        <a routerLink="/charity" routerLinkActive="active">Charity</a>
+        <a routerLink="/subscription" routerLinkActive="active">Subscription</a>
+        <a routerLink="/results" routerLinkActive="active">Results</a>
+      }
+      <button type="button" (click)="onLogout()">Logout</button>
+    }
+  </div>
+
+  @if (user$ | async; as user) {
+    <div class="user-pill">
+      <span>{{ user.name }}</span>
+      @if ((subscriptionStatus$ | async) === 'expired') {
+        <span class="expired">Expired</span>
+      }
+    </div>
+  }
+</nav>

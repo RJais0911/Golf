@@ -1,0 +1,53 @@
+<section class="auth-shell glass-card">
+  <div>
+    <h1>Create your account</h1>
+    <p class="muted">Join the monthly draw and direct part of every payment toward a charity you care about.</p>
+  </div>
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label class="field">
+      <span>Name</span>
+      <input type="text" formControlName="name" placeholder="Your full name">
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <span class="error-text">Name is required and must be 50 characters or fewer.</span>
+      }
+    </label>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" formControlName="email" placeholder="you@example.com">
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <span class="error-text">Enter a valid email address.</span>
+      }
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" formControlName="password" placeholder="Minimum 6 characters">
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="error-text">Password must be at least 6 characters.</span>
+      }
+    </label>
+
+    <label class="field">
+      <span>Confirm Password</span>
+      <input type="password" formControlName="confirmPassword" placeholder="Re-enter password">
+      @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid) {
+        <span class="error-text">Please confirm your password.</span>
+      }
+      @if (passwordMismatch) {
+        <span class="error-text">Passwords must match.</span>
+      }
+    </label>
+
+    @if (error$ | async; as error) {
+      <p class="error-text">{{ error }}</p>
+    }
+
+    <button class="primary-btn" type="submit">Sign Up</button>
+  </form>
+
+  @if (loading$ | async) {
+    <app-loader></app-loader>
+  }
+</section>

@@ -1,0 +1,16 @@
+<form class="glass-card form-grid" [formGroup]="form" (ngSubmit)="submit()">
+  <div>
+    <h3>Add Score</h3>
+    <p class="muted">Adding a score will remove your oldest score if you already have 5.</p>
+  </div>
+
+  <label class="field">
+    <span>Score Value</span>
+    <input type="number" min="1" max="45" step="1" formControlName="value">
+    @if (form.controls.value.touched && form.controls.value.invalid) {
+      <span class="error-text">Enter a whole number from 1 to 45.</span>
+    }
+  </label>
+
+  <button class="primary-btn" type="submit" [disabled]="disabled">Save Score</button>
+</form>

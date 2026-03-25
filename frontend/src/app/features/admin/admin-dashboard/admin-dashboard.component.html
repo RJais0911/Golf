@@ -1,0 +1,33 @@
+<section class="page-title">
+  <h1>Admin Dashboard</h1>
+  <p class="muted">Monitor users, draws, winners, and total charity movement.</p>
+</section>
+
+@if (stats) {
+  <section class="card-grid">
+    <article class="glass-card">
+      <h3>Total Users</h3>
+      <p>{{ stats.totalUsers }}</p>
+    </article>
+    <article class="glass-card">
+      <h3>Total Draws Run</h3>
+      <p>{{ stats.totalDraws }}</p>
+    </article>
+    <article class="glass-card">
+      <h3>Total Winners</h3>
+      <p>{{ stats.totalWinners }}</p>
+    </article>
+    <article class="glass-card">
+      <h3>Total Charity Contributions</h3>
+      <p>{{ stats.totalCharityContributions | inrCurrency }}</p>
+    </article>
+  </section>
+}
+
+<section class="card-grid quick-links">
+  <a class="glass-card" routerLink="/admin/draw">Run Draw</a>
+  <a class="glass-card" routerLink="/admin/winners">View Winners</a>
+  <a class="glass-card" routerLink="/admin/users">Manage Users</a>
+  <a class="glass-card" routerLink="/admin/charities">Manage Charities</a>
+  <a class="glass-card" routerLink="/admin/contributions">View Contributions</a>
+</section>

@@ -1,0 +1,46 @@
+<section class="page-title">
+  <h1>My Scores</h1>
+  <p class="muted">Keep exactly five active scores ready for the next draw.</p>
+</section>
+
+<div class="stack">
+  <app-score-add [disabled]="(scoreCount$ | async)! >= 5" (add)="onAddScore($event)"></app-score-add>
+
+  <section class="glass-card">
+    <div class="header-row">
+      <div>
+        <h3>Active Scores</h3>
+        <p class="muted">{{ scoreCount$ | async }}/5 scores added</p>
+      </div>
+    </div>
+
+    @if (loading$ | async) {
+      <app-loader></app-loader>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Value</th>
+            <th>Date Added</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (score of scores$ | async; track score._id) {
+            <tr>
+              <td>{{ score.value }}</td>
+              <td>{{ score.createdAt | date:'medium' }}</td>
+              <td>
+                <button class="danger-btn" type="button" (click)="onDeleteScore(score._id)">Delete</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="muted">No active scores yet.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>

@@ -1,0 +1,41 @@
+<section class="page-title">
+  <h1>Manage Charities</h1>
+  <p class="muted">Add, update, and remove supported charity organizations.</p>
+</section>
+
+<section class="glass-card form-grid">
+  <h3>Add Charity</h3>
+  <label class="field">
+    <span>Name</span>
+    <input type="text" [formControl]="form.controls.name">
+  </label>
+  <label class="field">
+    <span>Description</span>
+    <textarea rows="3" [formControl]="form.controls.description"></textarea>
+  </label>
+  <button class="primary-btn" type="button" (click)="add()">Add Charity</button>
+</section>
+
+<section class="glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (charity of charities$ | async; track charity._id) {
+        <tr>
+          <td>{{ charity.name }}</td>
+          <td>{{ charity.description }}</td>
+          <td class="actions">
+            <button class="secondary-btn" type="button" (click)="edit(charity)">Edit</button>
+            <button class="danger-btn" type="button" (click)="remove(charity._id)">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

@@ -1,0 +1,29 @@
+<section class="page-title">
+  <h1>Charity Contributions</h1>
+  <p class="muted">Full ledger of subscription and winning allocations to charities.</p>
+</section>
+
+<section class="glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Charity</th>
+        <th>Amount</th>
+        <th>Source</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (contribution of contributions; track contribution._id) {
+        <tr>
+          <td>{{ $any(contribution.userId).name }}</td>
+          <td>{{ $any(contribution.charityId).name }}</td>
+          <td>{{ contribution.amount | inrCurrency }}</td>
+          <td>{{ contribution.source | titlecase }}</td>
+          <td>{{ contribution.createdAt | date:'medium' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

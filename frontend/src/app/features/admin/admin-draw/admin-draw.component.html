@@ -1,0 +1,49 @@
+<section class="page-title">
+  <h1>Run Draw</h1>
+  <p class="muted">Start the latest draw for all eligible subscribers with five active scores.</p>
+</section>
+
+<section class="glass-card">
+  <button class="primary-btn" type="button" (click)="run()">Run New Draw</button>
+</section>
+
+@if (latestDraw$ | async; as draw) {
+  <section class="glass-card">
+    <h3>Latest Draw</h3>
+    <p class="muted">{{ draw.completedAt | date:'medium' }}</p>
+    <div class="badge-row">
+      @for (number of draw.numbers; track number) {
+        <span class="number-badge">{{ number }}</span>
+      }
+    </div>
+    <p>Winners count: {{ latestWinnersCount }}</p>
+  </section>
+}
+
+<section class="glass-card">
+  <h3>Draw History</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Numbers</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (draw of history$ | async; track draw._id || draw.id) {
+        <tr>
+          <td>{{ draw.createdAt | date:'medium' }}</td>
+          <td>
+            <div class="badge-row">
+              @for (number of draw.numbers; track number) {
+                <span class="number-badge">{{ number }}</span>
+              }
+            </div>
+          </td>
+          <td>{{ draw.status }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

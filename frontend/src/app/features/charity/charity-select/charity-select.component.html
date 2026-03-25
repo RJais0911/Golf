@@ -1,0 +1,37 @@
+<section class="page-title">
+  <h1>Choose Your Charity</h1>
+  <p class="muted">Pick a charity and decide what portion of every subscription and prize goes to it.</p>
+</section>
+
+@if (loading$ | async) {
+  <app-loader></app-loader>
+}
+
+@if (profile$ | async; as profile) {
+  <section class="glass-card form-grid">
+    <div>
+      <h3>Contribution Percentage</h3>
+      <p class="muted">₹{{ form.controls.contributionPercentage.value * 10 }} of your ₹1,000 subscription goes to charity.</p>
+    </div>
+
+    <label class="field">
+      <span>Contribution %</span>
+      <input type="number" min="10" max="100" formControlName="contributionPercentage">
+      @if (form.controls.contributionPercentage.touched && form.controls.contributionPercentage.invalid) {
+        <span class="error-text">Contribution percentage must be between 10 and 100.</span>
+      }
+    </label>
+
+    <button class="primary-btn" type="button" (click)="onSaveContribution()">Save Percentage</button>
+  </section>
+
+  <section class="card-grid">
+    @for (charity of charities$ | async; track charity._id) {
+      <article class="glass-card charity-card" [class.selected]="selectedCharityId(profile.charityId) === charity._id">
+        <h3>{{ charity.name }}</h3>
+        <p class="muted">{{ charity.description }}</p>
+        <button class="primary-btn" type="button" (click)="onSelectCharity(charity._id)">Select Charity</button>
+      </article>
+    }
+  </section>
+}

@@ -1,0 +1,65 @@
+<section class="page-title">
+  <h1>Subscription</h1>
+  <p class="muted">A monthly subscription keeps you eligible for score entry and draw participation.</p>
+</section>
+
+@if (profile$ | async; as profile) {
+  <section class="glass-card">
+    <h3>Current Status</h3>
+    <p>{{ profile.subscriptionStatus | titlecase }}</p>
+    <p class="muted">Expiry: {{ profile.subscriptionExpiresAt ? (profile.subscriptionExpiresAt | date:'mediumDate') : 'Not active' }}</p>
+  </section>
+
+  @if (profile.subscriptionStatus !== 'active') {
+    <form class="glass-card form-grid" [formGroup]="form">
+      <h3>Mock Payment Form</h3>
+      <label class="field">
+        <span>Card Number</span>
+        <input type="text" placeholder="XXXX XXXX XXXX XXXX" formControlName="cardNumber">
+      </label>
+      <label class="field">
+        <span>Card Holder Name</span>
+        <input type="text" formControlName="cardHolder">
+      </label>
+      <label class="field">
+        <span>Expiry</span>
+        <input type="text" placeholder="MM/YY" formControlName="expiry">
+      </label>
+      <label class="field">
+        <span>CVV</span>
+        <input type="password" formControlName="cvv">
+      </label>
+      <button class="primary-btn" type="button" (click)="activate()" [disabled]="loading">Activate Subscription</button>
+    </form>
+  }
+
+  <section class="glass-card">
+    <h3>History</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Amount</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (subscription of history; track subscription._id) {
+          <tr>
+            <td>{{ subscription.plan }}</td>
+            <td>{{ subscription.amount | inrCurrency }}</td>
+            <td>{{ subscription.startDate | date:'mediumDate' }}</td>
+            <td>{{ subscription.endDate | date:'mediumDate' }}</td>
+            <td>{{ subscription.status | titlecase }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="muted">No subscription history yet.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+}

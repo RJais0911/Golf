@@ -1,0 +1,50 @@
+<section class="page-title">
+  <h1>My Results</h1>
+  <p class="muted">See your latest draw outcomes and winnings history.</p>
+</section>
+
+@if (latestDraw$ | async; as draw) {
+  <section class="glass-card latest-draw">
+    <div>
+      <h3>Latest Draw Numbers</h3>
+      <p class="muted">{{ draw.completedAt | date:'medium' }}</p>
+    </div>
+    <div class="badge-row">
+      @for (number of draw.numbers; track number) {
+        <span class="number-badge">{{ number }}</span>
+      }
+    </div>
+  </section>
+}
+
+<section class="glass-card">
+  <h3>Results History</h3>
+  @if ((results$ | async)?.length) {
+    <table>
+      <thead>
+        <tr>
+          <th>Draw Date</th>
+          <th>Matches</th>
+          <th>Outcome</th>
+          <th>Prize</th>
+          <th>Charity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (result of results$ | async; track result._id) {
+          <tr>
+            <td>{{ $any(result.drawId).createdAt | date:'mediumDate' }}</td>
+            <td>{{ result.matchCount }}</td>
+            <td>{{ outcome(result.matchCount) }}</td>
+            <td>{{ result.prizeAmount | inrCurrency }}</td>
+            <td>{{ result.charityAmount | inrCurrency }}</td>
+            <td>{{ result.status | titlecase }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="muted">No draw results yet. Check back after the next draw!</p>
+  }
+</section>

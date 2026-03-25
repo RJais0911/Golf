@@ -1,0 +1,54 @@
+<section class="page-title">
+  <h1>Dashboard</h1>
+  <p class="muted">Your current subscription, score progress, draw status, and charity preferences in one place.</p>
+</section>
+
+@if (loading$ | async) {
+  <app-loader></app-loader>
+}
+
+@if (profile$ | async; as profile) {
+  @if (profile.subscriptionStatus !== 'active') {
+    <div class="banner">Your subscription is not active. Renew to keep adding draw scores.</div>
+  }
+
+  <section class="card-grid">
+    <article class="glass-card">
+      <h3>Hello, {{ profile.name }}</h3>
+      <p class="muted">Ready for the next draw.</p>
+    </article>
+
+    <article class="glass-card">
+      <h3>My Scores</h3>
+      <p>{{ scoreCount$ | async }}/5 scores added</p>
+      <a routerLink="/scores">Manage scores</a>
+    </article>
+
+    <article class="glass-card">
+      <h3>Subscription Status</h3>
+      <p>{{ profile.subscriptionStatus | titlecase }}</p>
+      <p class="muted">Expires: {{ profile.subscriptionExpiresAt ? (profile.subscriptionExpiresAt | date:'mediumDate') : 'Not active' }}</p>
+    </article>
+
+    <article class="glass-card">
+      <h3>My Charity</h3>
+      <p>{{ charityName(profile.charityId) }}</p>
+      <p class="muted">Contribution: {{ profile.contributionPercentage }}%</p>
+    </article>
+  </section>
+}
+
+@if (latestDraw$ | async; as draw) {
+  <section class="glass-card draw-card">
+    <div>
+      <h2>Latest Draw</h2>
+      <p class="muted">Completed {{ draw.completedAt | date:'medium' }}</p>
+    </div>
+    <div class="badge-row">
+      @for (number of draw.numbers; track number) {
+        <span class="number-badge">{{ number }}</span>
+      }
+    </div>
+    <a routerLink="/results">View my results</a>
+  </section>
+}
