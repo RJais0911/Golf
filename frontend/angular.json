@@ -13,9 +13,18 @@
           "options": {
             "browser": "src/main.ts",
             "index": "src/index.html",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.json",
             "inlineStyleLanguage": "scss",
-            "assets": [],
+            "assets": [
+              {
+                "glob": "favicon.ico",
+                "input": "src",
+                "output": "/"
+              }
+            ],
             "styles": [
               "src/styles.scss"
             ]
