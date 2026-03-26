@@ -2,6 +2,7 @@ const User = require('../models/User.model');
 const CharityContribution = require('../models/CharityContribution.model');
 const Draw = require('../models/Draw.model');
 const Winner = require('../models/Winner.model');
+const Subscription = require('../models/Subscription.model');
 const paginate = require('../utils/pagination');
 const httpError = require('../utils/httpError');
 
@@ -60,10 +61,11 @@ async function getContributions(page, limit) {
 }
 
 async function getAdminDashboardStats() {
-  const [totalUsers, totalDraws, totalWinners, totalContributions] = await Promise.all([
+  const [totalUsers, totalDraws, totalWinners, totalSubscriptions, totalContributions] = await Promise.all([
     User.countDocuments({ role: 'user' }),
     Draw.countDocuments(),
     Winner.countDocuments(),
+    Subscription.countDocuments(),
     CharityContribution.aggregate([{ $group: { _id: null, total: { $sum: '$amount' } } }])
   ]);
 
@@ -71,6 +73,7 @@ async function getAdminDashboardStats() {
     totalUsers,
     totalDraws,
     totalWinners,
+    totalSubscriptions,
     totalCharityContributions: totalContributions[0]?.total || 0
   };
 }

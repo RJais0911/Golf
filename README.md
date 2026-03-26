@@ -28,14 +28,14 @@ A full-stack golf subscription platform where users pay a monthly fee, submit up
    - `npm install`
    - `ng serve`
 
-## Default Admin Credentials
+## Default Demo Credentials
 
-- Email: `admin@platform.com`
-- Password: `Admin@123`
+- Admin: `admin@test.com / 123456`
+- User: `user@test.com / 123456`
 
 ## URLs
 
-- API base URL: `http://localhost:5000/api`
+- API base URL: `http://localhost:5001/api`
 - Frontend URL: `http://localhost:4200`
 
 ## Deployment Notes
@@ -49,8 +49,8 @@ A full-stack golf subscription platform where users pay a monthly fee, submit up
 Backend `.env` values:
 
 ```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/golf_charity_db
+PORT=5001
+MONGODB_URI=mongodb://127.0.0.1:27017/golf_charity_db
 JWT_ACCESS_SECRET=your_access_secret_here
 JWT_REFRESH_SECRET=your_refresh_secret_here
 NODE_ENV=development
@@ -71,3 +71,7 @@ Run it with:
 cd backend
 npm run seed
 ```
+
+## Assessment Payment Note
+
+The subscription flow uses an in-app mock payment activation for assessment/demo stability. It does not rely on Stripe checkout, webhooks, or external payment redirects.

@@ -2,6 +2,7 @@ const Draw = require('../models/Draw.model');
 const Score = require('../models/Score.model');
 const User = require('../models/User.model');
 const Winner = require('../models/Winner.model');
+const Subscription = require('../models/Subscription.model');
 const CharityContribution = require('../models/CharityContribution.model');
 const paginate = require('../utils/pagination');
 const httpError = require('../utils/httpError');
@@ -10,7 +11,8 @@ const {
   DRAW_NUMBERS_COUNT,
   DRAW_POOL_SIZE,
   DRAW_WIN_THRESHOLD,
-  PRIZE_AMOUNTS
+  PRIZE_POOL_PERCENTAGE,
+  PRIZE_DISTRIBUTION
 } = require('../config/constants');
 
 function generateDrawNumbers() {
@@ -22,6 +24,27 @@ function generateDrawNumbers() {
   return pool.slice(0, DRAW_NUMBERS_COUNT);
 }
 
+async function calculatePrizePool(lastDrawCreatedAt) {
+  const subscriptionFilter = {
+    paymentStatus: 'paid',
+    createdAt: lastDrawCreatedAt ? { $gt: lastDrawCreatedAt } : { $exists: true }
+  };
+
+  const subscriptionAgg = await Subscription.aggregate([
+    { $match: subscriptionFilter },
+    { $group: { _id: null, total: { $sum: '$amount' } } }
+  ]);
+
+  const subscriptionRevenue = subscriptionAgg[0]?.total || 0;
+  const previousDraw = await Draw.findOne().sort({ createdAt: -1 });
+  const rolloverAmount = previousDraw?.rolloverAmount || 0;
+
+  return {
+    totalPool: subscriptionRevenue * (PRIZE_POOL_PERCENTAGE / 100) + rolloverAmount,
+    previousRollover: rolloverAmount
+  };
+}
+
 async function runDraw(triggeredBy) {
   const cooldownDate = new Date(Date.now() - DRAW_COOLDOWN_HOURS * 60 * 60 * 1000);
   const recentDraw = await Draw.findOne({ createdAt: { $gt: cooldownDate } }).sort({ createdAt: -1 });
@@ -29,8 +52,14 @@ async function runDraw(triggeredBy) {
     throw httpError('A draw was already run within the last 24 hours', 400);
   }
 
+  const previousDraw = await Draw.findOne().sort({ createdAt: -1 });
+  const poolData = await calculatePrizePool(previousDraw?.createdAt || null);
+
   const draw = await Draw.create({
     numbers: generateDrawNumbers(),
+    totalPool: poolData.totalPool,
+    rolloverAmount: 0,
+    drawDate: new Date(),
     status: 'pending',
     triggeredBy
   });
@@ -41,8 +70,12 @@ async function runDraw(triggeredBy) {
     { $match: { count: DRAW_NUMBERS_COUNT } }
   ]);
 
-  let winnersCount = 0;
   const now = new Date();
+  const matchBuckets = {
+    3: [],
+    4: [],
+    5: []
+  };
 
   for (const candidate of eligibleUsers) {
     const user = await User.findOne({
@@ -64,44 +97,74 @@ async function runDraw(triggeredBy) {
     const matchCount = scoreValues.filter((value) => draw.numbers.includes(value)).length;
 
     if (matchCount >= DRAW_WIN_THRESHOLD) {
-      const prizeAmount = PRIZE_AMOUNTS[matchCount];
-      const charityAmount = prizeAmount * (user.contributionPercentage / 100);
+      matchBuckets[matchCount].push({ user, userScores });
+    } else {
+      await Score.updateMany(
+        { _id: { $in: userScores.map((score) => score._id) } },
+        { $set: { usedInDrawId: draw._id } }
+      );
+    }
+  }
+
+  let winnersCount = 0;
+  let nextRolloverAmount = 0;
+
+  for (const matchCount of [5, 4, 3]) {
+    const winnersForMatch = matchBuckets[matchCount];
+    const shareAmount = draw.totalPool * PRIZE_DISTRIBUTION[matchCount];
+
+    if (matchCount === 5 && winnersForMatch.length === 0) {
+      nextRolloverAmount += shareAmount;
+      continue;
+    }
+
+    if (winnersForMatch.length === 0) {
+      continue;
+    }
+
+    const payoutPerWinner = shareAmount / winnersForMatch.length;
+
+    for (const entry of winnersForMatch) {
+      const charityAmount = payoutPerWinner * (entry.user.contributionPercentage / 100);
 
       await Winner.create({
-        userId: user._id,
+        userId: entry.user._id,
         drawId: draw._id,
         matchCount,
-        prizeAmount,
+        payoutAmount: payoutPerWinner,
         charityAmount,
         status: 'pending'
       });
 
-      if (user.charityId) {
+      if (entry.user.charityId) {
         await CharityContribution.create({
-          userId: user._id,
-          charityId: user.charityId,
+          userId: entry.user._id,
+          charityId: entry.user.charityId,
           amount: charityAmount,
           source: 'winning'
         });
       }
 
+      await Score.updateMany(
+        { _id: { $in: entry.userScores.map((score) => score._id) } },
+        { $set: { usedInDrawId: draw._id } }
+      );
+
       winnersCount += 1;
     }
-
-    await Score.updateMany(
-      { _id: { $in: userScores.map((score) => score._id) } },
-      { $set: { usedInDrawId: draw._id } }
-    );
   }
 
   draw.status = 'completed';
   draw.completedAt = new Date();
+  draw.rolloverAmount = nextRolloverAmount;
   await draw.save();
 
   return {
     draw: {
       id: draw._id,
       numbers: draw.numbers,
+      totalPool: draw.totalPool,
+      rolloverAmount: draw.rolloverAmount,
       status: draw.status,
       completedAt: draw.completedAt
     },

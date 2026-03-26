@@ -31,6 +31,7 @@
               <td>{{ score.value }}</td>
               <td>{{ score.createdAt | date:'medium' }}</td>
               <td>
+                <button class="secondary-btn" type="button" (click)="onEditScore(score._id, score.value)">Edit</button>
                 <button class="danger-btn" type="button" (click)="onDeleteScore(score._id)">Delete</button>
               </td>
             </tr>

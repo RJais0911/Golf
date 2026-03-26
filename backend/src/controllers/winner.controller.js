@@ -1,12 +1,10 @@
 const winnerService = require('../services/winner.service');
+const { sendSuccess } = require('../utils/response');
 
 async function getWinners(req, res, next) {
   try {
     const result = await winnerService.getWinners(req.query.page, req.query.limit);
-    res.status(200).json({
-      message: 'Winners fetched successfully',
-      ...result
-    });
+    sendSuccess(res, 'Winners fetched successfully', result);
   } catch (error) {
     next(error);
   }
@@ -15,10 +13,7 @@ async function getWinners(req, res, next) {
 async function getWinnersByDraw(req, res, next) {
   try {
     const result = await winnerService.getWinnersByDraw(req.params.drawId);
-    res.status(200).json({
-      message: 'Draw winners fetched successfully',
-      ...result
-    });
+    sendSuccess(res, 'Draw winners fetched successfully', result);
   } catch (error) {
     next(error);
   }

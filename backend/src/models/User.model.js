@@ -10,8 +10,14 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
-  subscriptionStatus: { type: String, enum: ['active', 'inactive', 'expired'], default: 'inactive' },
+  subscriptionPlan: { type: String, enum: ['monthly', 'yearly', null], default: null },
+  subscriptionStatus: {
+    type: String,
+    enum: ['active', 'inactive', 'cancelled', 'expired'],
+    default: 'inactive'
+  },
   subscriptionExpiresAt: { type: Date, default: null },
+  subscriptionPaymentReference: { type: String, default: null },
   charityId: { type: mongoose.Schema.Types.ObjectId, ref: 'Charity', default: null },
   contributionPercentage: {
     type: Number,

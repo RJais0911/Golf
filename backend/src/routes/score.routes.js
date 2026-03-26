@@ -1,6 +1,6 @@
 const express = require('express');
 const { SCORE_MIN, SCORE_MAX } = require('../config/constants');
-const { verifyToken } = require('../middleware/auth.middleware');
+const { verifyToken, requireActiveSubscription } = require('../middleware/auth.middleware');
 const validate = require('../middleware/validate');
 const scoreController = require('../controllers/score.controller');
 
@@ -24,8 +24,9 @@ function validateScore(body) {
 }
 
 router.use(verifyToken);
-router.post('/', validate(validateScore), scoreController.addScore);
+router.post('/', requireActiveSubscription, validate(validateScore), scoreController.addScore);
+router.patch('/:id', requireActiveSubscription, validate(validateScore), scoreController.updateScore);
 router.get('/', scoreController.getScores);
-router.delete('/:id', scoreController.deleteScore);
+router.delete('/:id', requireActiveSubscription, scoreController.deleteScore);
 
 module.exports = router;

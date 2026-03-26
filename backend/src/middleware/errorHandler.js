@@ -3,6 +3,8 @@ const { NODE_ENV } = require('../config/env');
 function errorHandler(err, req, res, next) {
   const status = err.status || 500;
   const response = {
+    success: false,
+    data: null,
     message: err.message || 'Internal server error'
   };
 

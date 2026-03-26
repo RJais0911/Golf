@@ -6,7 +6,7 @@ async function getWinners(page, limit) {
   const total = await Winner.countDocuments();
   const query = Winner.find()
     .populate('userId', 'name email')
-    .populate('drawId', 'numbers createdAt')
+    .populate('drawId', 'numbers createdAt totalPool rolloverAmount')
     .sort({ createdAt: -1 });
   const winners = await paginate(query, page, limit);
 
@@ -31,8 +31,8 @@ async function markWinnerAsPaid(id) {
     throw httpError('Winner not found', 404);
   }
 
-  if (winner.status === 'paid') {
-    throw httpError('Winner already marked as paid', 400);
+  if (winner.status !== 'approved') {
+    throw httpError('Only approved winners can be marked as paid', 400);
   }
 
   winner.status = 'paid';
@@ -42,8 +42,35 @@ async function markWinnerAsPaid(id) {
   return { winner };
 }
 
+async function updateWinnerStatus(id, status) {
+  const winner = await Winner.findById(id);
+  if (!winner) {
+    throw httpError('Winner not found', 404);
+  }
+
+  if (winner.status === 'paid') {
+    throw httpError('Paid winners cannot be updated', 400);
+  }
+
+  if (status === 'approved') {
+    winner.status = 'approved';
+    winner.approvedAt = new Date();
+  } else if (status === 'rejected') {
+    winner.status = 'rejected';
+    winner.rejectedAt = new Date();
+  } else if (status === 'paid') {
+    return markWinnerAsPaid(id);
+  } else {
+    throw httpError('Invalid winner status', 400);
+  }
+
+  await winner.save();
+  return { winner };
+}
+
 module.exports = {
   getWinners,
   getWinnersByDraw,
-  markWinnerAsPaid
+  markWinnerAsPaid,
+  updateWinnerStatus
 };

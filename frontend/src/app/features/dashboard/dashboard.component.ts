@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { InrCurrencyPipe } from '../../shared/pipes/inr-currency.pipe';
 import { loadLatestDraw } from '../../store/draw/draw.actions';
 import { selectLatestDraw } from '../../store/draw/draw.selectors';
 import { loadScores } from '../../store/scores/scores.actions';
@@ -13,7 +14,7 @@ import { selectUserLoading, selectUserProfile } from '../../store/user/user.sele
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [AsyncPipe, DatePipe, TitleCasePipe, RouterLink, LoaderComponent],
+  imports: [AsyncPipe, DatePipe, TitleCasePipe, RouterLink, LoaderComponent, InrCurrencyPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

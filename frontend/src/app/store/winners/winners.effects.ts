@@ -54,8 +54,8 @@ export class WinnersEffects {
   updateWinnerStatus$ = createEffect(() =>
     this.actions$.pipe(
       ofType(WinnersActions.updateWinnerStatus),
-      mergeMap(({ id }) =>
-        this.adminService.updateWinnerStatus(id).pipe(
+      mergeMap(({ id, status }) =>
+        this.adminService.updateWinnerStatus(id, status).pipe(
           map((response) => WinnersActions.updateWinnerStatusSuccess({ winner: response.winner })),
           catchError((error) =>
             of(WinnersActions.updateWinnerStatusFailure({ error: error.error?.message || 'Failed to update winner' }))

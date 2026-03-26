@@ -22,9 +22,9 @@ export class AdminWinnersComponent {
     this.store.dispatch(loadWinners({ page: 1, limit: 20 }));
   }
 
-  markPaid(id: string): void {
-    if (window.confirm('Mark this winner as paid?')) {
-      this.store.dispatch(updateWinnerStatus({ id }));
+  updateStatus(id: string, status: 'approved' | 'rejected' | 'paid'): void {
+    if (window.confirm(`Mark this winner as ${status}?`)) {
+      this.store.dispatch(updateWinnerStatus({ id, status }));
     }
   }
 }

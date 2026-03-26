@@ -1,0 +1,33 @@
+<section class="page-title">
+  <h1>Subscriptions</h1>
+  <p class="muted">Monitor plan types, payment references, and current subscription status.</p>
+</section>
+
+<section class="glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Plan</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Payment</th>
+        <th>Start</th>
+        <th>End</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (subscription of subscriptions; track subscription._id) {
+        <tr>
+          <td>{{ $any(subscription.userId).name || subscription.userId }}</td>
+          <td>{{ subscription.plan | titlecase }}</td>
+          <td>{{ subscription.amount | inrCurrency }}</td>
+          <td>{{ subscription.status | titlecase }}</td>
+          <td>{{ subscription.paymentReference }}</td>
+          <td>{{ subscription.startDate | date:'mediumDate' }}</td>
+          <td>{{ subscription.endDate | date:'mediumDate' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

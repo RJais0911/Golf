@@ -1,12 +1,10 @@
 const scoreService = require('../services/score.service');
+const { sendSuccess } = require('../utils/response');
 
 async function addScore(req, res, next) {
   try {
     const { score } = await scoreService.addScore(req.user.id, req.body.value);
-    res.status(201).json({
-      message: 'Score added',
-      score
-    });
+    sendSuccess(res, 'Score added', { score }, 201);
   } catch (error) {
     next(error);
   }
@@ -15,10 +13,16 @@ async function addScore(req, res, next) {
 async function getScores(req, res, next) {
   try {
     const result = await scoreService.getScores(req.user.id);
-    res.status(200).json({
-      message: 'Scores fetched successfully',
-      ...result
-    });
+    sendSuccess(res, 'Scores fetched successfully', result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function updateScore(req, res, next) {
+  try {
+    const { score } = await scoreService.updateScore(req.user.id, req.params.id, req.body.value);
+    sendSuccess(res, 'Score updated', { score });
   } catch (error) {
     next(error);
   }
@@ -27,7 +31,7 @@ async function getScores(req, res, next) {
 async function deleteScore(req, res, next) {
   try {
     await scoreService.deleteScore(req.user.id, req.params.id);
-    res.status(200).json({ message: 'Score deleted' });
+    sendSuccess(res, 'Score deleted');
   } catch (error) {
     next(error);
   }
@@ -36,5 +40,6 @@ async function deleteScore(req, res, next) {
 module.exports = {
   addScore,
   getScores,
+  updateScore,
   deleteScore
 };

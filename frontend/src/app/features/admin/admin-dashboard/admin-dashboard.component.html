@@ -18,6 +18,10 @@
       <p>{{ stats.totalWinners }}</p>
     </article>
     <article class="glass-card">
+      <h3>Total Subscriptions</h3>
+      <p>{{ stats.totalSubscriptions }}</p>
+    </article>
+    <article class="glass-card">
       <h3>Total Charity Contributions</h3>
       <p>{{ stats.totalCharityContributions | inrCurrency }}</p>
     </article>
@@ -28,6 +32,7 @@
   <a class="glass-card" routerLink="/admin/draw">Run Draw</a>
   <a class="glass-card" routerLink="/admin/winners">View Winners</a>
   <a class="glass-card" routerLink="/admin/users">Manage Users</a>
+  <a class="glass-card" routerLink="/admin/subscriptions">View Subscriptions</a>
   <a class="glass-card" routerLink="/admin/charities">Manage Charities</a>
   <a class="glass-card" routerLink="/admin/contributions">View Contributions</a>
 </section>

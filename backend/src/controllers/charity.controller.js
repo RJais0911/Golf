@@ -1,12 +1,10 @@
 const charityService = require('../services/charity.service');
+const { sendSuccess } = require('../utils/response');
 
 async function getCharities(req, res, next) {
   try {
     const result = await charityService.getCharities();
-    res.status(200).json({
-      message: 'Charities fetched successfully',
-      ...result
-    });
+    sendSuccess(res, 'Charities fetched successfully', result);
   } catch (error) {
     next(error);
   }
@@ -15,7 +13,7 @@ async function getCharities(req, res, next) {
 async function selectCharity(req, res, next) {
   try {
     await charityService.selectCharity(req.user.id, req.body.charityId);
-    res.status(200).json({ message: 'Charity selected' });
+    sendSuccess(res, 'Charity selected');
   } catch (error) {
     next(error);
   }

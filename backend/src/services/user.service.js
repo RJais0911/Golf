@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/User.model');
 const Charity = require('../models/Charity.model');
 const Winner = require('../models/Winner.model');
+const Score = require('../models/Score.model');
 const paginate = require('../utils/pagination');
 const httpError = require('../utils/httpError');
 
@@ -19,7 +20,23 @@ async function getProfile(userId) {
     await user.save();
   }
 
-  return { user };
+  const [activeScores, totalWinningsAgg, participatedDraws] = await Promise.all([
+    Score.countDocuments({ userId, usedInDrawId: null }),
+    Winner.aggregate([
+      { $match: { userId: user._id, status: { $in: ['approved', 'paid', 'pending'] } } },
+      { $group: { _id: null, total: { $sum: '$payoutAmount' } } }
+    ]),
+    Score.distinct('usedInDrawId', { userId, usedInDrawId: { $ne: null } })
+  ]);
+
+  return {
+    user: {
+      ...user.toObject(),
+      activeScoresCount: activeScores,
+      drawParticipationCount: participatedDraws.length,
+      totalWinnings: totalWinningsAgg[0]?.total || 0
+    }
+  };
 }
 
 async function updateProfile(userId, changes) {

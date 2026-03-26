@@ -1,8 +1,9 @@
 <nav class="navbar">
-  <a class="brand" routerLink="/dashboard">Golf Charity</a>
+  <a class="brand" routerLink="/">Golf Charity</a>
 
   <div class="links">
     @if ((isAuthenticated$ | async) === false) {
+      <a routerLink="/" routerLinkActive="active">Home</a>
       <a routerLink="/auth/login" routerLinkActive="active">Login</a>
       <a routerLink="/auth/signup" routerLinkActive="active">Sign Up</a>
     }

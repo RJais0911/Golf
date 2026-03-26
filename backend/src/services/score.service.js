@@ -63,8 +63,25 @@ async function deleteScore(userId, scoreId) {
   await Score.findByIdAndDelete(scoreId);
 }
 
+async function updateScore(userId, scoreId, value) {
+  const score = await Score.findOne({ _id: scoreId, userId });
+  if (!score) {
+    throw httpError('Score not found', 404);
+  }
+
+  if (score.usedInDrawId) {
+    throw httpError('Cannot edit a score that has been used in a draw', 400);
+  }
+
+  score.value = value;
+  await score.save();
+
+  return { score };
+}
+
 module.exports = {
   addScore,
   getScores,
-  deleteScore
+  deleteScore,
+  updateScore
 };

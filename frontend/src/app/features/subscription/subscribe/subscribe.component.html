@@ -1,36 +1,32 @@
 <section class="page-title">
   <h1>Subscription</h1>
-  <p class="muted">A monthly subscription keeps you eligible for score entry and draw participation.</p>
+  <p class="muted">Choose a plan and activate a test subscription for this assessment demo.</p>
 </section>
 
 @if (profile$ | async; as profile) {
   <section class="glass-card">
     <h3>Current Status</h3>
     <p>{{ profile.subscriptionStatus | titlecase }}</p>
+    <p class="muted">Plan: {{ profile.subscriptionPlan ? (profile.subscriptionPlan | titlecase) : 'Not selected' }}</p>
     <p class="muted">Expiry: {{ profile.subscriptionExpiresAt ? (profile.subscriptionExpiresAt | date:'mediumDate') : 'Not active' }}</p>
+    @if (profile.subscriptionStatus === 'active') {
+      <button class="danger-btn" type="button" (click)="cancelSubscription()">Cancel Subscription</button>
+    }
   </section>
 
   @if (profile.subscriptionStatus !== 'active') {
-    <form class="glass-card form-grid" [formGroup]="form">
-      <h3>Mock Payment Form</h3>
-      <label class="field">
-        <span>Card Number</span>
-        <input type="text" placeholder="XXXX XXXX XXXX XXXX" formControlName="cardNumber">
-      </label>
-      <label class="field">
-        <span>Card Holder Name</span>
-        <input type="text" formControlName="cardHolder">
-      </label>
-      <label class="field">
-        <span>Expiry</span>
-        <input type="text" placeholder="MM/YY" formControlName="expiry">
-      </label>
-      <label class="field">
-        <span>CVV</span>
-        <input type="password" formControlName="cvv">
-      </label>
-      <button class="primary-btn" type="button" (click)="activate()" [disabled]="loading">Activate Subscription</button>
-    </form>
+    <section class="card-grid">
+      @for (plan of planCards; track plan.plan) {
+        <article class="glass-card">
+          <h3>{{ plan.title }}</h3>
+          <p class="price">{{ plan.amount | inrCurrency }}</p>
+          <p class="muted">{{ plan.note }}</p>
+          <button class="primary-btn" type="button" (click)="activate(plan.plan)" [disabled]="loading">
+            Activate Test Subscription
+          </button>
+        </article>
+      }
+    </section>
   }
 
   <section class="glass-card">
@@ -63,3 +59,10 @@
     </table>
   </section>
 }
+
+<section class="glass-card">
+  <h3>Assessment Demo Payment</h3>
+  <p class="muted">
+    Payment is mocked for assessment simplicity. Plan activation, expiry, eligibility, and admin subscription records still work with real backend data.
+  </p>
+</section>

@@ -16,8 +16,10 @@ function buildUserPayload(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+    subscriptionPlan: user.subscriptionPlan,
     subscriptionStatus: user.subscriptionStatus,
     subscriptionExpiresAt: user.subscriptionExpiresAt,
+    subscriptionPaymentReference: user.subscriptionPaymentReference,
     charityId: user.charityId,
     contributionPercentage: user.contributionPercentage
   };

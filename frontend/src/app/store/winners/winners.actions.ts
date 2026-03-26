@@ -18,7 +18,10 @@ export const loadUserResultsSuccess = createAction(
 );
 export const loadUserResultsFailure = createAction('[Winners] Load User Results Failure', props<{ error: string }>());
 
-export const updateWinnerStatus = createAction('[Winners] Update Winner Status', props<{ id: string }>());
+export const updateWinnerStatus = createAction(
+  '[Winners] Update Winner Status',
+  props<{ id: string; status: 'approved' | 'rejected' | 'paid' }>()
+);
 export const updateWinnerStatusSuccess = createAction(
   '[Winners] Update Winner Status Success',
   props<{ winner: Winner }>()

@@ -20,7 +20,7 @@
 
     <article class="glass-card">
       <h3>My Scores</h3>
-      <p>{{ scoreCount$ | async }}/5 scores added</p>
+      <p>{{ profile.activeScoresCount ?? (scoreCount$ | async) }}/5 scores added</p>
       <a routerLink="/scores">Manage scores</a>
     </article>
 
@@ -34,6 +34,18 @@
       <h3>My Charity</h3>
       <p>{{ charityName(profile.charityId) }}</p>
       <p class="muted">Contribution: {{ profile.contributionPercentage }}%</p>
+    </article>
+
+    <article class="glass-card">
+      <h3>Draw Participation</h3>
+      <p>{{ profile.drawParticipationCount ?? 0 }} entries</p>
+      <p class="muted">Track your completed draw entries and winnings</p>
+    </article>
+
+    <article class="glass-card">
+      <h3>Total Winnings</h3>
+      <p>{{ profile.totalWinnings ?? 0 | inrCurrency }}</p>
+      <a routerLink="/results">View results</a>
     </article>
   </section>
 }
@@ -49,6 +61,7 @@
         <span class="number-badge">{{ number }}</span>
       }
     </div>
+    <p class="muted">Prize pool: {{ draw.totalPool ?? 0 | inrCurrency }} | Rollover: {{ draw.rolloverAmount ?? 0 | inrCurrency }}</p>
     <a routerLink="/results">View my results</a>
   </section>
 }

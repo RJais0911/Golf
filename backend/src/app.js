@@ -19,7 +19,7 @@ app.use(generalLimiter);
 app.use('/api', apiRoutes);
 
 app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+  res.status(404).json({ success: false, data: null, message: 'Route not found' });
 });
 
 app.use(errorHandler);

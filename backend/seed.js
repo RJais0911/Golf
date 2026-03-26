@@ -15,7 +15,6 @@ async function seed() {
   await connectDb();
   await mongoose.connection.dropDatabase();
 
-  const adminPassword = await bcrypt.hash('Admin@123', SALT_ROUNDS);
   const userPassword = await bcrypt.hash('User@123', SALT_ROUNDS);
 
   const charities = await Charity.insertMany([
@@ -25,17 +24,17 @@ async function seed() {
   ]);
 
   await User.create({
-    name: 'Admin',
-    email: 'admin@platform.com',
-    password: adminPassword,
+    name: 'Admin User',
+    email: 'admin@test.com',
+    password: await bcrypt.hash('123456', SALT_ROUNDS),
     role: 'admin'
   });
 
   await User.insertMany([
     {
-      name: 'Rahul Sharma',
-      email: 'rahul@example.com',
-      password: userPassword,
+      name: 'Demo User',
+      email: 'user@test.com',
+      password: await bcrypt.hash('123456', SALT_ROUNDS),
       role: 'user',
       charityId: charities[0]._id
     },

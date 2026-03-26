@@ -10,11 +10,16 @@ export interface UserProfile {
   name: string;
   email: string;
   role: 'user' | 'admin';
-  subscriptionStatus: 'active' | 'inactive' | 'expired';
+  subscriptionPlan?: 'monthly' | 'yearly' | null;
+  subscriptionStatus: 'active' | 'inactive' | 'cancelled' | 'expired';
   subscriptionExpiresAt: string | null;
+  subscriptionPaymentReference?: string | null;
   charityId: Charity | string | null;
   contributionPercentage: number;
   isActive?: boolean;
+  activeScoresCount?: number;
+  drawParticipationCount?: number;
+  totalWinnings?: number;
 }
 
 export interface Score {
@@ -23,14 +28,18 @@ export interface Score {
   value: number;
   usedInDrawId: string | null;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Draw {
   _id?: string;
   id?: string;
   numbers: number[];
+  totalPool?: number;
+  rolloverAmount?: number;
   status: 'pending' | 'completed' | 'cancelled';
   createdAt?: string;
+  drawDate?: string;
   completedAt: string | null;
 }
 
@@ -39,9 +48,11 @@ export interface Winner {
   userId: UserProfile | string;
   drawId: Draw | string;
   matchCount: number;
-  prizeAmount: number;
+  payoutAmount: number;
   charityAmount: number;
-  status: 'pending' | 'paid';
+  status: 'pending' | 'approved' | 'rejected' | 'paid';
+  approvedAt?: string | null;
+  rejectedAt?: string | null;
   paidAt: string | null;
   createdAt: string;
 }
@@ -49,12 +60,15 @@ export interface Winner {
 export interface Subscription {
   _id: string;
   userId: string;
-  plan: string;
+  plan: 'monthly' | 'yearly';
   amount: number;
   startDate: string;
   endDate: string;
-  status: 'active' | 'expired' | 'cancelled';
+  status: 'active' | 'inactive' | 'cancelled' | 'expired';
+  paymentReference: string;
+  paymentStatus: 'pending' | 'paid';
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CharityContribution {
@@ -70,5 +84,6 @@ export interface AdminDashboardStats {
   totalUsers: number;
   totalDraws: number;
   totalWinners: number;
+  totalSubscriptions: number;
   totalCharityContributions: number;
 }

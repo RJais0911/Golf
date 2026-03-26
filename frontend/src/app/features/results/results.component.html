@@ -37,7 +37,7 @@
             <td>{{ $any(result.drawId).createdAt | date:'mediumDate' }}</td>
             <td>{{ result.matchCount }}</td>
             <td>{{ outcome(result.matchCount) }}</td>
-            <td>{{ result.prizeAmount | inrCurrency }}</td>
+            <td>{{ result.payoutAmount | inrCurrency }}</td>
             <td>{{ result.charityAmount | inrCurrency }}</td>
             <td>{{ result.status | titlecase }}</td>
           </tr>

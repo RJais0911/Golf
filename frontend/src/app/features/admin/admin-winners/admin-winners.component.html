@@ -22,12 +22,16 @@
           <td>{{ $any(winner.userId).name }}</td>
           <td>{{ $any(winner.drawId).createdAt | date:'mediumDate' }}</td>
           <td>{{ winner.matchCount }}</td>
-          <td>{{ winner.prizeAmount | inrCurrency }}</td>
+          <td>{{ winner.payoutAmount | inrCurrency }}</td>
           <td>{{ winner.charityAmount | inrCurrency }}</td>
           <td>{{ winner.status | titlecase }}</td>
           <td>
             @if (winner.status === 'pending') {
-              <button class="primary-btn" type="button" (click)="markPaid(winner._id)">Mark Paid</button>
+              <button class="secondary-btn" type="button" (click)="updateStatus(winner._id, 'approved')">Approve</button>
+              <button class="danger-btn" type="button" (click)="updateStatus(winner._id, 'rejected')">Reject</button>
+            }
+            @if (winner.status === 'approved') {
+              <button class="primary-btn" type="button" (click)="updateStatus(winner._id, 'paid')">Mark Paid</button>
             }
           </td>
         </tr>

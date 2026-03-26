@@ -15,8 +15,8 @@ function validateCreateCharity(body) {
 
 function validateWinnerStatus(body) {
   const errors = [];
-  if (body.status !== 'paid') {
-    errors.push({ message: "Status must equal 'paid'", field: 'status' });
+  if (!['approved', 'rejected', 'paid'].includes(body.status)) {
+    errors.push({ message: "Status must be one of 'approved', 'rejected', or 'paid'", field: 'status' });
   }
   return { value: body, errors };
 }
@@ -24,6 +24,7 @@ function validateWinnerStatus(body) {
 router.use(verifyToken, requireAdmin);
 router.get('/users', adminController.getUsers);
 router.patch('/users/:id', adminController.updateUser);
+router.get('/subscriptions', adminController.getSubscriptions);
 router.get('/dashboard', adminController.getDashboardStats);
 router.post('/charities', validate(validateCreateCharity), adminController.createCharity);
 router.patch('/charities/:id', adminController.updateCharity);
