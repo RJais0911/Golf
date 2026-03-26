@@ -28,27 +28,12 @@
             "styles": [
               "src/styles.scss"
             ]
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
-            }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "buildTarget": "golf-charity-frontend:build"
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "golf-charity-frontend:build:production"
-            }
           }
         }
       }

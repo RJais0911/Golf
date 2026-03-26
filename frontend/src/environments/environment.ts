@@ -1,4 +1,4 @@
 export const environment = {
-  apiUrl: 'http://localhost:5001/api',
-  production: false
+  apiUrl: 'https://golf-backend-7b8k.onrender.com/api',
+  production: true
 };
