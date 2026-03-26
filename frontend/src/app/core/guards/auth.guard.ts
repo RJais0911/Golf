@@ -1,26 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, take } from 'rxjs';
-import { selectCurrentUser, selectIsAuthenticated } from '../../store/auth/auth.selectors';
+import { map, take } from 'rxjs';
+import { selectIsAuthenticated } from '../../store/auth/auth.selectors';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
   const router = inject(Router);
 
-  return combineLatest([
-    store.select(selectIsAuthenticated),
-    store.select(selectCurrentUser)
-  ]).pipe(
+  return store.select(selectIsAuthenticated).pipe(
     take(1),
-    map(([isAuthenticated, user]) => {
+    map((isAuthenticated) => {
       if (!isAuthenticated) {
         void router.navigateByUrl('/auth/login');
-        return false;
-      }
-
-      if (user?.role === 'admin' && !state.url.startsWith('/admin')) {
-        void router.navigateByUrl('/admin');
         return false;
       }
 

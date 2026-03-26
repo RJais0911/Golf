@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { AdminService } from '../../../core/services/admin.service';
 import { CharityContribution } from '../../../core/models/app.models';
@@ -14,6 +14,7 @@ import { InrCurrencyPipe } from '../../../shared/pipes/inr-currency.pipe';
 })
 export class AdminContributionsComponent {
   private readonly adminService = inject(AdminService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   contributions: CharityContribution[] = [];
 
@@ -21,6 +22,7 @@ export class AdminContributionsComponent {
     this.adminService.getContributions().subscribe({
       next: (response) => {
         this.contributions = response.contributions;
+        this.cdr.markForCheck();
       }
     });
   }

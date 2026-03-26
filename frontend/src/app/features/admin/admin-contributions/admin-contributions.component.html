@@ -11,6 +11,7 @@
         <th>Charity</th>
         <th>Amount</th>
         <th>Source</th>
+        <th>Plan</th>
         <th>Date</th>
       </tr>
     </thead>
@@ -21,7 +22,12 @@
           <td>{{ $any(contribution.charityId).name }}</td>
           <td>{{ contribution.amount | inrCurrency }}</td>
           <td>{{ contribution.source | titlecase }}</td>
+          <td>{{ contribution.subscriptionPlan ? (contribution.subscriptionPlan | titlecase) : '-' }}</td>
           <td>{{ contribution.createdAt | date:'medium' }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="muted">No contribution records yet.</td>
         </tr>
       }
     </tbody>

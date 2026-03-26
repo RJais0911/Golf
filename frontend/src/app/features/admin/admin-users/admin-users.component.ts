@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { UserProfile } from '../../../core/models/app.models';
 
@@ -11,6 +11,7 @@ import { UserProfile } from '../../../core/models/app.models';
 })
 export class AdminUsersComponent {
   private readonly adminService = inject(AdminService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   users: UserProfile[] = [];
 
@@ -22,6 +23,7 @@ export class AdminUsersComponent {
     this.adminService.getUsers().subscribe({
       next: (response) => {
         this.users = response.users;
+        this.cdr.markForCheck();
       }
     });
   }

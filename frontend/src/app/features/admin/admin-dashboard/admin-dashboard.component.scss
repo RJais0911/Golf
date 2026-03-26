@@ -1,5 +1,63 @@
-.quick-links a {
+.page-title {
+  margin-bottom: 2rem;
+}
+
+.page-title h1 {
+  margin: 0 0 0.75rem;
+}
+
+.muted {
+  max-width: 42rem;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: stretch;
+}
+
+.glass-card {
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.glass-card h3 {
+  margin: 0 0 1.25rem;
+  line-height: 1.2;
+}
+
+.glass-card p {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.quick-links {
+  margin-top: 1.75rem;
+}
+
+.quick-links .glass-card {
+  min-height: 0;
+  justify-content: center;
   text-decoration: none;
   color: inherit;
   font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.quick-links .glass-card:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .glass-card {
+    min-height: 132px;
+  }
 }

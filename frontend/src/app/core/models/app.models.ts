@@ -71,12 +71,26 @@ export interface Subscription {
   updatedAt?: string;
 }
 
+export interface AdminSubscriptionSummary {
+  userId: string;
+  name: string;
+  email: string;
+  plan: 'monthly' | 'yearly' | null;
+  amount: number | null;
+  status: 'active' | 'inactive' | 'cancelled' | 'expired';
+  paymentReference: string | null;
+  startDate: string | null;
+  endDate: string | null;
+}
+
 export interface CharityContribution {
   _id: string;
   userId: UserProfile | string;
   charityId: Charity | string;
   amount: number;
   source: 'subscription' | 'winning';
+  subscriptionPlan?: 'monthly' | 'yearly' | null;
+  paymentReference?: string | null;
   createdAt: string;
 }
 

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import {
   AdminDashboardStats,
+  AdminSubscriptionSummary,
   CharityContribution,
   Subscription,
   UserProfile,
@@ -28,9 +29,9 @@ export class AdminService {
       .pipe(map((response) => response.data));
   }
 
-  getSubscriptions(page = 1, limit = 20): Observable<{ subscriptions: Subscription[]; total: number; page: number; totalPages: number }> {
+  getSubscriptions(page = 1, limit = 20): Observable<{ subscriptions: AdminSubscriptionSummary[]; total: number; page: number; totalPages: number }> {
     return this.http
-      .get<{ success: boolean; data: { subscriptions: Subscription[]; total: number; page: number; totalPages: number } }>(
+      .get<{ success: boolean; data: { subscriptions: AdminSubscriptionSummary[]; total: number; page: number; totalPages: number } }>(
         `${environment.apiUrl}/admin/subscriptions?page=${page}&limit=${limit}`
       )
       .pipe(map((response) => response.data));

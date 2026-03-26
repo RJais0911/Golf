@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -9,7 +9,7 @@ import { selectSubscriptionStatus } from '../../../store/user/user.selectors';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [AsyncPipe, NgIf, RouterLink, RouterLinkActive],
+  imports: [AsyncPipe, RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
