@@ -45,6 +45,10 @@ A full-stack golf subscription platform where users pay a monthly fee, submit up
 - Database deployment target: MongoDB Atlas
 - Backend start command on Render: `npm start`
 - Backend build command on Render: `npm run build`
+- Frontend option on Render: `Static Site`
+- Frontend root directory on Render: `frontend`
+- Frontend build command on Render: `npm install && npm run build`
+- Frontend publish directory on Render: `dist/golf-charity-frontend/browser`
 
 ## Environment Variables
 
@@ -77,6 +81,24 @@ Notes:
 - Do not commit `.env` to GitHub.
 - In production, the refresh-token cookie is configured for cross-site frontend/backend deployment with `secure: true` and `sameSite: none`.
 - In MongoDB Atlas, make sure `Network Access` allows your local IP for development and `0.0.0.0/0` if Render needs public access.
+
+## Frontend Deployment on Render
+
+If you want to deploy the Angular frontend on Render instead of Vercel:
+
+1. Choose `New Static Site`
+2. Set `Root Directory` to `frontend`
+3. Set `Build Command` to:
+   - `npm install && npm run build`
+4. Set `Publish Directory` to:
+   - `dist/golf-charity-frontend/browser`
+5. Before building, update:
+   - [frontend/src/environments/environment.prod.ts](C:/Users/jaisw/OneDrive/Desktop/Golf/frontend/src/environments/environment.prod.ts)
+   - replace `https://your-backend-service.onrender.com/api` with your actual Render backend URL
+6. In Render Static Site settings, add a rewrite rule for Angular routing:
+   - Source: `/*`
+   - Destination: `/index.html`
+   - Action: `Rewrite`
 
 ## Seed Data
 
