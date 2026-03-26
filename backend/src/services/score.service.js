@@ -28,6 +28,11 @@ async function ensureActiveSubscription(userId) {
 async function addScore(userId, value) {
   await ensureActiveSubscription(userId);
 
+  const existingScore = await Score.findOne({ userId, usedInDrawId: null, value });
+  if (existingScore) {
+    throw httpError('This score is already present in your current active scores', 400);
+  }
+
   const count = await Score.countDocuments({ userId, usedInDrawId: null });
   if (count >= SCORE_LIMIT) {
     const oldestScore = await Score.findOne({ userId, usedInDrawId: null }).sort({ createdAt: 1 });
@@ -71,6 +76,17 @@ async function updateScore(userId, scoreId, value) {
 
   if (score.usedInDrawId) {
     throw httpError('Cannot edit a score that has been used in a draw', 400);
+  }
+
+  const duplicateScore = await Score.findOne({
+    userId,
+    usedInDrawId: null,
+    value,
+    _id: { $ne: scoreId }
+  });
+
+  if (duplicateScore) {
+    throw httpError('This score is already present in your current active scores', 400);
   }
 
   score.value = value;

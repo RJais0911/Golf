@@ -67,11 +67,15 @@ export class DrawEffects {
     () =>
       this.actions$.pipe(
         ofType(DrawActions.runDrawSuccess),
-        tap(({ winnersCount }) =>
-          this.toast.showSuccess(`Draw completed with ${winnersCount} winner(s)`)
-        )
-      ),
-    { dispatch: false }
+        mergeMap(({ winnersCount }) => {
+          this.toast.showSuccess(`Draw completed with ${winnersCount} winner(s)`);
+
+          return [
+            DrawActions.loadLatestDraw(),
+            DrawActions.loadDrawHistory({ page: 1, limit: 20 })
+          ];
+        })
+      )
   );
 
   failures$ = createEffect(
