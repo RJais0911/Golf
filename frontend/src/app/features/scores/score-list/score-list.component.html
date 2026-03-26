@@ -4,7 +4,7 @@
 </section>
 
 <div class="stack">
-  <app-score-add [disabled]="(scoreCount$ | async)! >= 5" (add)="onAddScore($event)"></app-score-add>
+  <app-score-add (add)="onAddScore($event)"></app-score-add>
 
   <section class="glass-card">
     <div class="header-row">

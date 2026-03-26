@@ -4,19 +4,23 @@ const authService = require('../services/auth.service');
 const { sendSuccess } = require('../utils/response');
 
 function setRefreshCookie(res, token) {
+  const isProduction = NODE_ENV === 'production';
+
   res.cookie(REFRESH_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000
   });
 }
 
 function clearRefreshCookie(res) {
+  const isProduction = NODE_ENV === 'production';
+
   res.clearCookie(REFRESH_COOKIE_NAME, {
     httpOnly: true,
-    secure: NODE_ENV === 'production',
-    sameSite: 'strict'
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'strict'
   });
 }
 
